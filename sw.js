@@ -1,5 +1,5 @@
 // Gym Logboek service worker: app works offline; new versions load in the background.
-const CACHE = "gym-logboek-v2";
+const CACHE = "gym-logboek-v3";
 const SHELL = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL))); self.skipWaiting(); });
 self.addEventListener("activate", e => {
