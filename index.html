@@ -1111,7 +1111,11 @@ ensureSession();renderEx();applyData();updatePill();
 if(!CFG) openSetup(); else syncNow();
 window.addEventListener("online",()=>syncNow());
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&CFG)syncNow();});
-if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
+if("serviceWorker" in navigator){
+  const hadSW=!!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener("controllerchange",()=>{if(hadSW&&!window.__reloaded){window.__reloaded=true;location.reload();}});
+  navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>r.update()).catch(()=>{});
+}
 </script>
 </body>
 </html>
