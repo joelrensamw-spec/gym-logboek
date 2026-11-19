@@ -287,7 +287,7 @@ table.wl td:last-child{text-align:right}
   <div class="sheet setup" role="dialog" aria-modal="true" aria-labelledby="sTitle">
     <h2 id="sTitle">Koppel je sheet</h2>
     <p class="note">Plak hier de web-app-link uit Google Apps Script en je geheime code. Dit hoef je maar één keer te doen.</p>
-    <label class="flabel" for="sUrl">Web-app-link</label>
+    <label class="flabel" for="sUrl">Web-app-link (of je hele koppel-link)</label>
     <input id="sUrl" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off">
     <label class="flabel" for="sTok">Geheime code</label>
     <input id="sTok" autocomplete="off">
@@ -1009,7 +1009,9 @@ function openSetup(msg){$("#sUrl").value=CFG?CFG.url:"";$("#sTok").value=CFG?CFG
 $("#sCancel").onclick=()=>$("#setup").classList.remove("on");
 $("#conn").onclick=()=>{if(!CFG)openSetup();else{setConn("","Bezig…");syncNow().then(e=>{if(e&&e.hard)openSetup(errText(e));});}};
 $("#sGo").onclick=async()=>{
-  const url=$("#sUrl").value.trim(), token=$("#sTok").value.trim();
+  let url=$("#sUrl").value.trim(), token=$("#sTok").value.trim();
+  const km=url.match(/#?koppel=([^\s&]+)/); // whole koppel-link pasted
+  if(km){try{const [u,t]=atob(decodeURIComponent(km[1])).split("|");if(u&&t){url=u;token=t;}}catch(e){}}
   if(!/^https:\/\/script\.google(usercontent)?\.com\//.test(url)){$("#sMsg").innerHTML=`<div class="msg err">Dat lijkt geen Apps Script-link. Hij begint met https://script.google.com/</div>`;return;}
   const prev=CFG;CFG={url,token};
   $("#sGo").disabled=true;$("#sGo").textContent="Testen…";
